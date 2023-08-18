@@ -1,6 +1,7 @@
 @extends('layouts.master')
 
 @section('content')
+
 <div class="container bottom-3">
     <h2 class="mb-4">Contacts</h2>
 
@@ -47,4 +48,5 @@
         </div>
     </div>
 </div>
+
 @endsection
