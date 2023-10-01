@@ -1,11 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html dir="{!! App::isLocale('ar') ? 'rtl' : 'ltr' !!}" lang="{{ App::currentLocale() }}">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>AdminLTE 3 | Dashboard 2</title>
 
+    @if (App::isLocale('ar'))
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.rtl.min.css"
+            integrity="sha384-gXt9imSW0VcJVHezoNQsP+TNrjYXoGcrqBZJpry9zJt8PCQjobwmhMGaDHTASo9N" crossorigin="anonymous">
+    @endif
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous">
+    </script>
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -181,8 +190,8 @@
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
             <a href="{{ route('dashboard') }}" class="brand-link">
-                <img src="{{ asset('dist/img/AdminLTELogo.png') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
-                    style="opacity: .8">
+                <img src="{{ asset('dist/img/AdminLTELogo.png') }}" alt="AdminLTE Logo"
+                    class="brand-image img-circle elevation-3" style="opacity: .8">
                 <span class="brand-text font-weight-light">CRM</span>
             </a>
 
@@ -191,7 +200,8 @@
                 <!-- Sidebar user panel (optional) -->
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                     <div class="image">
-                        <img src="{{ asset('dist/img/user2-160x160.jpg') }}" class="img-circle elevation-2" alt="User Image">
+                        <img src="{{ asset('dist/img/user2-160x160.jpg') }}" class="img-circle elevation-2"
+                            alt="User Image">
                     </div>
                     <div class="info">
                         <a href="{{ route('profile.edit') }}" class="d-block">{{ Auth::user()->name }}</a>
@@ -286,25 +296,25 @@
             <section class="content">
 
                 @yield('content')
-    </section>
-    <!-- /.content -->
-    </div>
-    <!-- /.content-wrapper -->
-
-    <!-- Control Sidebar -->
-    <aside class="control-sidebar control-sidebar-dark">
-        <!-- Control sidebar content goes here -->
-    </aside>
-    <!-- /.control-sidebar -->
-
-    <!-- Main Footer -->
-    <footer class="main-footer">
-        <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong>
-        All rights reserved.
-        <div class="float-right d-none d-sm-inline-block">
-            <b>Version</b> 3.2.0
+            </section>
+            <!-- /.content -->
         </div>
-    </footer>
+        <!-- /.content-wrapper -->
+
+        <!-- Control Sidebar -->
+        <aside class="control-sidebar control-sidebar-dark">
+            <!-- Control sidebar content goes here -->
+        </aside>
+        <!-- /.control-sidebar -->
+
+        <!-- Main Footer -->
+        <footer class="main-footer">
+            <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong>
+            All rights reserved.
+            <div class="float-right d-none d-sm-inline-block">
+                <b>Version</b> 3.2.0
+            </div>
+        </footer>
     </div>
     <!-- ./wrapper -->
 
@@ -320,6 +330,8 @@
 
     <!-- PAGE PLUGINS -->
     <!-- jQuery Mapael -->
+    <script src="https://ajax.googleapis.com/ajax/libs/d3js/7.8.5/d3.min.js"></script>
+
     <script src="{{ asset('plugins/jquery-mousewheel/jquery.mousewheel.js') }}"></script>
     <script src="{{ asset('plugins/raphael/raphael.min.js') }}"></script>
     <script src="{{ asset('plugins/jquery-mapael/jquery.mapael.min.js') }}"></script>
@@ -331,6 +343,73 @@
     <script src="{{ asset('dist/js/demo.js') }}"></script>
     <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
     <script src="{{ asset('dist/js/pages/dashboard2.js') }}"></script>
+    <script>
+        var classroomId;
+        const userId = "{{ Auth::id() }}";
+    </script>
+    @stack('scripts')
+    @vite(['resources/js/app.js']);
+
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import {
+            initializeApp
+        }
+        from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
+        import {
+            getMessaging,
+            getToken,
+            onMessage,
+        } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-messaging.js";
+
+        import {
+            getAnalytics
+        } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-analytics.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+            apiKey: "AIzaSyB-hxyEMp41IqFOB8jsoabgdYH31jYTA7I",
+            authDomain: "gsg-classroom.firebaseapp.com",
+            projectId: "gsg-classroom",
+            storageBucket: "gsg-classroom.appspot.com",
+            messagingSenderId: "1009956087555",
+            appId: "1:1009956087555:web:626812fb3e8787aa68ab36",
+            measurementId: "G-1059XE8T4N"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+
+
+        // Add the public key generated from the console here.
+        getToken(messaging, {
+                vapidKey: "BJSjqYQh4TTdKsvQVHQ9F-uXiMkdeFhrzlYfoEvosJBJXCpLci_q3KN7pl7M4s_g9mTkpJzaxVltDuaZ9m897Ok"
+            })
+            .then((currentToken) => {
+                console.log(currentToken);
+                if (currentToken) {
+                    $.post('api/devices', {
+                        _token: "{{ csrf_token() }}",
+                        token: currentToken
+                    }, () => {})
+                } else {
+                    // Show permission request UI
+                    console.log('No registration token available. Request permission to generate one.');
+                    // ...
+                }
+            }).catch((err) => {
+                console.log('An error occurred while retrieving token. ', err);
+                // ...
+            });
+        onMessage(messaging, (payload) => {
+            console.log('Message received. ', payload);
+            // ...
+        });
+    </script>
 </body>
 
 </html>

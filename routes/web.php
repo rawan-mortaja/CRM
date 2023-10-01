@@ -31,9 +31,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/logout', function () {
         return view('auth.login');
     });
-});
-
-Route::middleware(['auth'])->group(function () {
     Route::resource('contacts', ContactController::class);
 });
 
